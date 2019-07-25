@@ -48,28 +48,12 @@ async.each(deps, function (dep, cb) {
 function buildDepObj(str, deps) {
     var out = {};
     out.repo = deps[str];
-    if (str.indexOf("@") > 0 && str.indexOf("|") == -1) {
+    if (str.indexOf("@") > 0) {
         str = /^(.*)@(.*)$/.exec(str);
         out.name = str[1];
-        out.tag = str[2];
-        out.rev = "HEAD";
-        if (out.tag.toLowerCase() != "trunk") out.repo = out.repo + "/tags/";
-    } else if (str.indexOf("@") > 0 && str.indexOf("|") > 0) {
-        str = /^(.*)@(.*)\|(.*)$/.exec(str);
-        out.name = str[1];
-        out.tag = str[2];
-        out.rev = str[3];
-        if (out.tag.toLowerCase() != "trunk") out.repo = out.repo + "/tags/";
-    } else if(out.repo.indexOf("/trunk/") > 0) {
-        out.name = str;
-        out.tag = "";
-        out.rev = "HEAD";
-    } else {
-        out.name = str;
-        out.tag = "";
-        out.rev = "HEAD";
+        out.rev = str[2];
     }
-    out.COPath = out.repo + "/" + out.tag;
+    out.COPath = out.repo;
     out.installDir = nodeModulesDir + "/" + out.name + "/";
     out.installDirExists = fs.existsSync(rootDir + '/' + out.installDir);
     return out;
